@@ -2,14 +2,21 @@ import "dotenv/config";
 import express from "express";
 
 const app = express();
-const PORT = 1234;
+const PORT = process.env.PORT || 1234;
 
-app.get('/', (_, res) => {
-	res.send("demo");
-})
+const littleJson = {
+  emotes: {
+    buh: "buh",
+    guh: "guh",
+  },
+  data: "11111",
+};
+
+app.get("/api", (_, res) => {
+  res.send(littleJson);
+});
 
 app.listen(PORT, () => {
-	console.log(`server running on ${PORT} port`);
-	console.log(process.env.BUH);
-})
-
+  console.log(`server running on ${PORT} port`);
+  console.log(process.env.BUH);
+});

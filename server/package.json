@@ -4,7 +4,7 @@
   "description": "buh",
   "main": "app.ts",
   "scripts": {
-    "dev": "nodemon -w ./ -x tsx ./app.ts"
+    "server": "nodemon -w ./ -x tsx ./app.ts"
   },
   "author": "egrqq",
   "dependencies": {
