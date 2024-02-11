@@ -1,8 +1,9 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
+import morgan from "morgan";
 
 const app = express();
-const PORT = process.env.PORT || 1234;
 
 const littleJson = {
   emotes: {
@@ -12,11 +13,11 @@ const littleJson = {
   data: "11111",
 };
 
+app.use(morgan('dev'));
+app.use(cors());
+
 app.get("/api", (_, res) => {
   res.send(littleJson);
 });
 
-app.listen(PORT, () => {
-  console.log(`server running on ${PORT} port`);
-  console.log(process.env.BUH);
-});
+export default app;
