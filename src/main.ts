@@ -4,15 +4,18 @@ import { fragmentShaderSource, vertexShaderSource } from "./engine/sources";
 import createProgram from "./engine/program";
 import { gl, resizeCanvasToDisplaySize } from "./engine/canvas";
 
-function init() {
+fetch("./bruh.vert").then((data) => data.text());
+
+async function init() {
   // create shaders
   if (!gl) return;
-  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  const fragmentShader = createShader(
-    gl,
-    gl.FRAGMENT_SHADER,
-    fragmentShaderSource
-  );
+  const [vertSource, fragSource] = await Promise.all([
+    fetch("./shaders/triangle.vs").then((res) => res.text()),
+    fetch("./shaders/triangle.fs").then((res) => res.text()),
+  ]);
+
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertSource);
+  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragSource);
 
   // create program
   if (!vertexShader || !fragmentShader) return;
@@ -28,8 +31,7 @@ function init() {
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   // prettier-ignore
-  // put data in the buffer
-  // three 2d points, for triangle
+  // put data in the buffer, three 2d points, for triangle
   const positions: Iterable<number> = [
     0, 0,
     0.5, 0.3,
