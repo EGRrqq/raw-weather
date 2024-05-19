@@ -60,7 +60,7 @@ function init() {
   );
 
   // handle canvas resize
-  resizeCanvasToDisplaySize(gl.canvas);
+  resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -82,3 +82,4 @@ function init() {
 }
 
 window.addEventListener("DOMContentLoaded", init, { once: true });
+

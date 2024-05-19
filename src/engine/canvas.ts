@@ -3,20 +3,19 @@ const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
 export const gl = canvas.getContext("webgl2");
 
-export function resizeCanvasToDisplaySize(
-  canvas: WebGL2RenderingContext["canvas"]
-) {
+export function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
   // lookup the size of canvas in css pixels
-  let height = canvas.height;
-  let width = canvas.width;
+  const displayWidth = canvas.clientWidth;
+  const displayHeight = canvas.clientHeight;
 
   // check if canvas is not the same size
-  const resizeFlag = canvas.width !== width || canvas.height !== height;
+  const resizeFlag =
+    canvas.width !== displayWidth || canvas.height !== displayHeight;
 
   if (resizeFlag) {
     // make canvas the same size
-    width = canvas.width;
-    height = canvas.height;
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
   }
 
   // return flag
