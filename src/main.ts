@@ -1,28 +1,61 @@
 import "./style.css";
-import createShader from "./engine/shader";
-import { fragmentShaderSource, vertexShaderSource } from "./engine/sources";
-import createProgram from "./engine/program";
-import { gl, resizeCanvasToDisplaySize } from "./engine/canvas";
+import * as Canvas from "./canvas";
+import * as WebGl from "./webgl";
 
-fetch("./bruh.vert").then((data) => data.text());
+interface ISetupProgram {
+  gl: WebGL2RenderingContext;
+  paths: {
+    vsPath: string;
+    fsPath: string;
+  };
+}
+
+window.addEventListener("DOMContentLoaded", init, { once: true });
 
 async function init() {
+  if (!Canvas.gl) return;
+  // setup GLSL program
+  const paths: ISetupProgram["paths"] = {
+    vsPath: "./shaders/triangle.vs",
+    fsPath: "./shaders/triangle.fs",
+  };
+  const program = await setupProgram({ gl: Canvas.gl, paths });
+
+  if (!program) return;
+  // supply data to program
+  const vao = supplyDataToProgram(Canvas.gl, program);
+
+  if (!vao) return;
+  // handle canvas resize
+  canvasResize(Canvas.gl);
+  // clear canvas
+  clearCanvas(Canvas.gl);
+
+  // draw the scene
+  draw(Canvas.gl, program, vao);
+}
+
+async function setupProgram({ gl, paths }: ISetupProgram) {
   // create shaders
-  if (!gl) return;
   const [vertSource, fragSource] = await Promise.all([
-    fetch("./shaders/triangle.vs").then((res) => res.text()),
-    fetch("./shaders/triangle.fs").then((res) => res.text()),
+    fetch(paths.vsPath).then((res) => res.text()),
+    fetch(paths.fsPath).then((res) => res.text()),
   ]);
 
-  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertSource);
-  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragSource);
+  const vertexShader = WebGl.createShader(gl, gl.VERTEX_SHADER, vertSource);
+  const fragmentShader = WebGl.createShader(gl, gl.FRAGMENT_SHADER, fragSource);
 
   // create program
   if (!vertexShader || !fragmentShader) return;
-  const program = createProgram(gl, vertexShader, fragmentShader);
+  const program = WebGl.createProgram(gl, vertexShader, fragmentShader);
 
-  // supply data to program
-  if (!program) return;
+  return program;
+}
+
+function supplyDataToProgram(
+  gl: WebGL2RenderingContext,
+  program: WebGLProgram
+) {
   // look up where the vertex data needs to go.
   // always do during the init, not in render loop
   const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
@@ -61,15 +94,25 @@ async function init() {
     offset
   );
 
-  // handle canvas resize
-  resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+  return vao;
+}
+
+function canvasResize(gl: WebGL2RenderingContext) {
+  Canvas.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+}
 
-  // clear canvas
+function clearCanvas(gl: WebGL2RenderingContext) {
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT);
+}
 
+function draw(
+  gl: WebGL2RenderingContext,
+  program: WebGLProgram,
+  vao: WebGLVertexArrayObject
+) {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
 
@@ -82,6 +125,4 @@ async function init() {
   const count = 3;
   gl.drawArrays(primitiveType, offset_arrays, count);
 }
-
-window.addEventListener("DOMContentLoaded", init, { once: true });
 

@@ -4,12 +4,11 @@
 // highp is a good default, means "high precision"
 precision highp float;
 
+uniform vec4 u_color;
 // we need to declare an output for the fragment shader
 out vec4 outColor;
 
 void main() {
   // setup a light green color
-  // basically rgba(0, 255, 255* 0,7, 1)
-  // 1 is a max value in glsl
-outColor = vec4(0, 1, 0.7, 1);
+  outColor = vec4(0, 1, 0.7f, 1);
 }
