@@ -6,5 +6,5 @@ export default defineConfig({
     outDir: "../dist",
     assetsDir: "",
   },
-  base: "/little-notes/",
+  base: "/raw-weather/",
 });
