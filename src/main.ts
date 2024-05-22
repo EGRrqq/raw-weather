@@ -23,7 +23,7 @@ async function init() {
 
   if (!program) return;
   // supply data to program
-  const vao = supplyDataToProgram(Canvas.gl, program);
+  const { posCount, vao } = supplyDataToProgram(Canvas.gl, program);
 
   if (!vao) return;
   // handle canvas resize
@@ -32,7 +32,7 @@ async function init() {
   clearCanvas(Canvas.gl);
 
   // draw the scene
-  draw(Canvas.gl, program, vao);
+  draw(Canvas.gl, program, vao, posCount);
 }
 
 async function setupProgram({ gl, paths }: ISetupProgram) {
@@ -69,19 +69,22 @@ function supplyDataToProgram(
   const y = 0;
   const y_offset = 0.15;
 
-  // prettier-ignore
   // put data in the buffer, two 2d points
-  const positions: Iterable<number> = [
-    x, y + y_offset,
-    x, y - y_offset,
+  const positions = [
+    [x, y + y_offset],
+    [x, y - y_offset],
 
-    x - x_offset, y + y_offset,
-    x, y - y_offset,
+    [x - x_offset, y + y_offset],
+    [x, y - y_offset],
 
-    x + x_offset, y + y_offset,
-    x, y - y_offset,
+    [x + x_offset, y + y_offset],
+    [x, y - y_offset],
   ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array(positions.flat()),
+    gl.STATIC_DRAW
+  );
 
   // attribute state
   const vao = gl.createVertexArray();
@@ -91,7 +94,7 @@ function supplyDataToProgram(
   gl.enableVertexAttribArray(positionAttributeLocation);
 
   // tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-  const size = 2; // 2 components per iteration
+  const size = positions[0].length; // 2 components per iteration
   const type = gl.FLOAT; // the data is 32bit floats
   const normalize = false; // don't normalize the data
   const stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
@@ -105,24 +108,15 @@ function supplyDataToProgram(
     offset
   );
 
-  return vao;
-}
-
-function canvasResize(gl: WebGL2RenderingContext) {
-  Canvas.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
-  // Tell WebGL how to convert from clip space to pixels
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-}
-
-function clearCanvas(gl: WebGL2RenderingContext) {
-  gl.clearColor(0, 0, 0, 0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
+  const posCount = positions.length;
+  return { posCount, vao };
 }
 
 function draw(
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
-  vao: WebGLVertexArrayObject
+  vao: WebGLVertexArrayObject,
+  posCount: number
 ) {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
@@ -135,7 +129,18 @@ function draw(
   // draw
   const primitiveType = gl.LINES;
   const offset = 0;
-  const count = 6;
+  const count = posCount || 2;
   gl.drawArrays(primitiveType, offset, count);
+}
+
+function canvasResize(gl: WebGL2RenderingContext) {
+  Canvas.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+  // Tell WebGL how to convert from clip space to pixels
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+}
+
+function clearCanvas(gl: WebGL2RenderingContext) {
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
