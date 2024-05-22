@@ -63,12 +63,23 @@ function supplyDataToProgram(
   const positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
+  // coords data
+  const x = 0;
+  const x_offset = 0.005;
+  const y = 0;
+  const y_offset = 0.15;
+
   // prettier-ignore
-  // put data in the buffer, three 2d points, for triangle
+  // put data in the buffer, two 2d points
   const positions: Iterable<number> = [
-    0, 0,
-    0.5, 0.3,
-    0.7, 0.2
+    x, y + y_offset,
+    x, y - y_offset,
+
+    x - x_offset, y + y_offset,
+    x, y - y_offset,
+
+    x + x_offset, y + y_offset,
+    x, y - y_offset,
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -115,14 +126,16 @@ function draw(
 ) {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
-
   // Bind the attribute/buffer set we want.
   gl.bindVertexArray(vao);
 
+  // set a line width
+  gl.lineWidth(7);
+
   // draw
-  const primitiveType = gl.TRIANGLES;
-  const offset_arrays = 0;
-  const count = 3;
-  gl.drawArrays(primitiveType, offset_arrays, count);
+  const primitiveType = gl.LINES;
+  const offset = 0;
+  const count = 6;
+  gl.drawArrays(primitiveType, offset, count);
 }
 
