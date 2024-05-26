@@ -130,12 +130,19 @@ function draw(
   const canvasResUniform = gl.getUniformLocation(program, "u_resolution");
   gl.uniform2f(canvasResUniform, gl.canvas.height, gl.canvas.width);
 
+  const timeUniform = gl.getUniformLocation(program, "u_time");
+
   // draw
   const primitiveType = gl.LINES;
   const offset = 0;
   const count = posCount || 2;
 
-  gl.drawArrays(primitiveType, offset, count);
+  function draw() {
+    gl.uniform1f(timeUniform, performance.now() / 1000);
+    gl.drawArrays(primitiveType, offset, count);
+    requestAnimationFrame(draw);
+  }
+  draw();
 }
 
 function canvasResize(gl: WebGL2RenderingContext) {
