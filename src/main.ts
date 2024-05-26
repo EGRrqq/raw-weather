@@ -126,10 +126,15 @@ function draw(
   // set a line width
   gl.lineWidth(7);
 
+  // set uniform var
+  const canvasResUniform = gl.getUniformLocation(program, "u_resolution");
+  gl.uniform2f(canvasResUniform, gl.canvas.height, gl.canvas.width);
+
   // draw
   const primitiveType = gl.LINES;
   const offset = 0;
   const count = posCount || 2;
+
   gl.drawArrays(primitiveType, offset, count);
 }
 
