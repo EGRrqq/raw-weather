@@ -128,8 +128,6 @@ function draw(
 
   // set uniform var
   const canvasResUniform = gl.getUniformLocation(program, "u_resolution");
-  gl.uniform2f(canvasResUniform, gl.canvas.height, gl.canvas.width);
-
   const timeUniform = gl.getUniformLocation(program, "u_time");
 
   // draw
@@ -138,7 +136,9 @@ function draw(
   const count = posCount || 2;
 
   function draw() {
+    gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
     gl.uniform1f(timeUniform, performance.now() / 1000);
+
     gl.drawArrays(primitiveType, offset, count);
     requestAnimationFrame(draw);
   }
