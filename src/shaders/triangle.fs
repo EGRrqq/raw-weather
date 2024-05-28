@@ -4,7 +4,6 @@
 // highp is a good default, means "high precision"
 precision highp float;
 
-#define PI 3.14159265359
 vec4 mainColor = vec4(0.0f, 0.7f, 1.0f, 1.0f);
 vec4 shadeColorF = vec4(0.0f, 0.59f, 0.84f, 1.0f);
 vec4 shadeColorS = vec4(0.0f, 0.5f, 0.7f, 1.0f);
@@ -24,7 +23,7 @@ void main() {
   float pct = abs(sin(u_time * 0.25f));
 
   // check if the pixel in a border range
-  if(st.x < 0.499f || st.y < 0.429f) {
+  if(st.x < 0.499f) {
     // mix the two shade colors for border
     FragColor = mix(shadeColorF, shadeColorS, pct);
   } else {

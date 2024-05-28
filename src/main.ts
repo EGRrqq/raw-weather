@@ -1,3 +1,6 @@
+// todo:
+// need to restructure animate func inside draw
+
 import "./style.css";
 import * as Canvas from "./canvas";
 import * as WebGl from "./webgl";
@@ -67,7 +70,7 @@ function supplyDataToProgram(
   const x = 0;
   const x_offset = 0.005;
   const y = 0;
-  const y_offset = 0.15;
+  const y_offset = 0.07;
 
   // put data in the buffer, two 2d points
   const positions = [
@@ -135,14 +138,18 @@ function draw(
   const offset = 0;
   const count = posCount || 2;
 
-  function draw() {
+  function animate() {
+    // should run the resize func, but for now it works badly
+    // its moving the shader to the side
+    // after restructuring
+
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
     gl.uniform1f(timeUniform, performance.now() / 1000);
 
     gl.drawArrays(primitiveType, offset, count);
-    requestAnimationFrame(draw);
+    requestAnimationFrame(animate);
   }
-  draw();
+  animate();
 }
 
 function canvasResize(gl: WebGL2RenderingContext) {
