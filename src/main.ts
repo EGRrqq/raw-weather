@@ -133,9 +133,9 @@ function draw(
 
   const onAnimate = () => {
     // handle canvas resize
-    canvasResize(gl);
+    Canvas.resizeData(gl);
     // clear canvas
-    clearCanvas(gl);
+    Canvas.resizeData(gl);
 
     // set uniforms
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
@@ -150,16 +150,5 @@ function draw(
 
   // run the animation
   onAnimate();
-}
-
-function canvasResize(gl: WebGL2RenderingContext) {
-  Canvas.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
-  // Tell WebGL how to convert from clip space to pixels
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-}
-
-function clearCanvas(gl: WebGL2RenderingContext) {
-  gl.clearColor(0, 0, 0, 0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
