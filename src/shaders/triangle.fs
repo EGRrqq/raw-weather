@@ -11,17 +11,20 @@ vec4 shadeColorS = vec4(0.0f, 0.5f, 0.7f, 1.0f);
 uniform vec2 u_resolution;
 uniform float u_time;
 
+// get time vars from fragment shader
+in float time;
+
 // we need to declare an output for the fragment shader
 out vec4 FragColor;
 
 void main() {
   // st - spatial texture coords
   // normalized coords of current pixel texture
-  vec2 st = vec2(gl_FragCoord.x - u_time * 0.25f, gl_FragCoord.y) / u_resolution.xy;
+  vec2 st = vec2(gl_FragCoord.x - time, gl_FragCoord.y - time) / u_resolution.xy;
 
   // border with current frame rate
   // - 0.5f ratio added cause border moves too fast
-  float border = 0.499f - u_time * 0.25f * 0.5f;
+  float border = 0.499f - time * 0.5f;
 
   // percentage of shade gradient
   float pct = abs(sin(u_time * 0.25f));
