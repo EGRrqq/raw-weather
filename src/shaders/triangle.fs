@@ -15,15 +15,19 @@ uniform float u_time;
 out vec4 FragColor;
 
 void main() {
-  // spatial texture coords
+  // st - spatial texture coords
   // normalized coords of current pixel texture
-  vec2 st = gl_FragCoord.xy / u_resolution.xy;
+  vec2 st = vec2(gl_FragCoord.x - u_time * 0.25f, gl_FragCoord.y) / u_resolution.xy;
+
+  // border with current frame rate
+  // 0.5f ratio added cause border moves too fast
+  float border = 0.499f - u_time * 0.25f * 0.5f;
 
   // percentage of shade gradient
   float pct = abs(sin(u_time * 0.25f));
 
   // check if the pixel in a border range
-  if(st.x < 0.499f) {
+  if(st.x < border) {
     // mix the two shade colors for border
     FragColor = mix(shadeColorF, shadeColorS, pct);
   } else {
