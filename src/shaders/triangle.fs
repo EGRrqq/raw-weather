@@ -20,11 +20,17 @@ out vec4 FragColor;
 void main() {
   // st - spatial texture coords
   // normalized coords of current pixel texture
-  vec2 st = vec2(gl_FragCoord.x - time, gl_FragCoord.y - time) / u_resolution.xy;
+  // vertical movement + shake on sides
+  // vec2 st = vec2(gl_FragCoord.x - time, gl_FragCoord.y - time) / u_resolution.xy;
+  vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - time) / u_resolution.xy;
 
   // border with current frame rate
+  // support shake on sides
   // - 0.5f ratio added cause border moves too fast
-  float border = 0.499f - time * 0.5f;
+  // float border = 0.499f - time * 0.5f;
+
+  // border without shake
+  float border = 0.499f;
 
   // percentage of shade gradient
   float pct = abs(sin(u_time * 0.25f));
