@@ -20,7 +20,7 @@ void main() {
   vec2 st = vec2(gl_FragCoord.x - u_time * 0.25f, gl_FragCoord.y) / u_resolution.xy;
 
   // border with current frame rate
-  // 0.5f ratio added cause border moves too fast
+  // - 0.5f ratio added cause border moves too fast
   float border = 0.499f - u_time * 0.25f * 0.5f;
 
   // percentage of shade gradient

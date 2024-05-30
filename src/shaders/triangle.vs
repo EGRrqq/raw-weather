@@ -7,8 +7,8 @@ in vec4 a_position;
 
 void main() {
   // send position with horizontal movement
-  // u_time - current frame rate
-  // 0.25 frame rate factor
+  // - u_time - current frame rate
+  // - 0.25 frame rate factor
   vec4 a_position = vec4(a_position.x - u_time * 0.25f, a_position.y, a_position.z, a_position.w);
 
   // gl_Position is a special vertex shader var
