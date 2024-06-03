@@ -14,6 +14,7 @@ interface ISetupProgram {
 interface IParticleData {
   vao: WebGLVertexArrayObject;
   posCount: number;
+  xPos: number;
 }
 
 interface IParticleCoords {
@@ -54,7 +55,7 @@ async function init() {
     if (!vao) return;
 
     // push particles
-    particles.push({ vao, posCount });
+    particles.push({ vao, posCount, xPos: coords.x });
   }
 
   // draw the scene
@@ -147,9 +148,10 @@ function draw(
   // set a line width
   gl.lineWidth(7);
 
-  // set uniform var
+  // set uniform vars
   const canvasResUniform = gl.getUniformLocation(program, "u_resolution");
   const timeUniform = gl.getUniformLocation(program, "u_time");
+  const xPosUniform = gl.getUniformLocation(program, "u_xPos");
 
   // draw settings
   const primitiveType = gl.LINES;
@@ -161,12 +163,16 @@ function draw(
     // clear canvas
     Canvas.clearData(gl);
 
-    // set uniforms
+    // set current canvas resolution
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
+    // set time for shader animation
     gl.uniform1f(timeUniform, performance.now() / 1000);
 
     // draw each particle
-    for (const { vao, posCount } of particles) {
+    for (const { vao, posCount, xPos } of particles) {
+      // set init xPos
+      gl.uniform1f(xPosUniform, xPos);
+
       // Bind the attribute/buffer set we want.
       gl.bindVertexArray(vao);
 

@@ -10,6 +10,7 @@ vec4 shadeColorS = vec4(0.0f, 0.5f, 0.7f, 1.0f);
 
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform float u_xPos;
 
 // get time vars from fragment shader
 in float time;
@@ -30,7 +31,7 @@ void main() {
   // float border = 0.499f - time * 0.5f;
 
   // border without shake
-  float border = 0.499f;
+  float border = 0.499f + u_xPos * 0.5f;
 
   // percentage of shade gradient
   float pct = abs(sin(u_time * 0.25f));
