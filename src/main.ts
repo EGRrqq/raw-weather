@@ -10,6 +10,18 @@ interface ISetupProgram {
   };
 }
 
+interface IParticleData {
+  vao: WebGLVertexArrayObject;
+  posCount: number;
+}
+
+interface IParticleCoords {
+  x: number;
+  x_offset: number;
+  y: number;
+  y_offset: number;
+}
+
 window.addEventListener("DOMContentLoaded", init, { once: true });
 
 async function init() {
@@ -22,13 +34,30 @@ async function init() {
   const program = await setupProgram({ gl: Canvas.gl, paths });
 
   if (!program) return;
-  // supply data to program
-  const { posCount, vao } = supplyDataToProgram(Canvas.gl, program);
+  // Store the state of each particle
+  const particles: IParticleData[] = [];
 
-  if (!vao) return;
+  // Create 10 particles
+  for (let i = 0; i < 10; i++) {
+    // coords data
+    const coords = {
+      x: getRandomArbitrary(-1, 1), // Random x position for each particle
+      x_offset: 0.005,
+      y: 0,
+      y_offset: 0.07,
+    };
+
+    // supply data to program
+    const { posCount, vao } = supplyDataToProgram(Canvas.gl, program, coords);
+
+    if (!vao) return;
+
+    // push particles
+    particles.push({ vao, posCount });
+  }
 
   // draw the scene
-  draw(Canvas.gl, program, vao, posCount);
+  draw(Canvas.gl, program, particles);
 }
 
 async function setupProgram({ gl, paths }: ISetupProgram) {
@@ -50,7 +79,8 @@ async function setupProgram({ gl, paths }: ISetupProgram) {
 
 function supplyDataToProgram(
   gl: WebGL2RenderingContext,
-  program: WebGLProgram
+  program: WebGLProgram,
+  coords: IParticleCoords
 ) {
   // look up where the vertex data needs to go.
   // always do during the init, not in render loop
@@ -60,10 +90,7 @@ function supplyDataToProgram(
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   // coords data
-  const x = 0;
-  const x_offset = 0.005;
-  const y = 0;
-  const y_offset = 0.07;
+  const { x, x_offset, y, y_offset } = coords;
 
   // put data in the buffer, two 2d points
   const positions = [
@@ -111,13 +138,10 @@ function supplyDataToProgram(
 function draw(
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
-  vao: WebGLVertexArrayObject,
-  posCount: number
+  particles: IParticleData[]
 ) {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
-  // Bind the attribute/buffer set we want.
-  gl.bindVertexArray(vao);
 
   // set a line width
   gl.lineWidth(7);
@@ -129,20 +153,25 @@ function draw(
   // draw settings
   const primitiveType = gl.LINES;
   const offset = 0;
-  const count = posCount || 2;
 
   const onAnimate = () => {
     // handle canvas resize
     Canvas.resizeData(gl);
     // clear canvas
-    Canvas.resizeData(gl);
+    Canvas.clearData(gl);
 
     // set uniforms
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
     gl.uniform1f(timeUniform, performance.now() / 1000);
 
-    // draw data
-    gl.drawArrays(primitiveType, offset, count);
+    // draw each particle
+    for (const { vao, posCount } of particles) {
+      // Bind the attribute/buffer set we want.
+      gl.bindVertexArray(vao);
+
+      // draw data
+      gl.drawArrays(primitiveType, offset, posCount);
+    }
 
     // perform an animation
     requestAnimationFrame(onAnimate);
@@ -150,5 +179,9 @@ function draw(
 
   // run the animation
   onAnimate();
+}
+
+function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
 }
 
