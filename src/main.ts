@@ -15,6 +15,7 @@ interface IParticleData {
   vao: WebGLVertexArrayObject;
   posCount: number;
   xPos: number;
+  startTime: number;
 }
 
 interface IParticleCoords {
@@ -39,24 +40,27 @@ async function init() {
   // Store the state of each particle
   const particles: IParticleData[] = [];
 
-  // Create 10 particles
-  for (let i = 0; i < 10; i++) {
-    // coords data
-    const coords = {
-      x: Math.getRandomArbitrary(-1, 1), // Random x position for each particle
-      x_offset: 0.005,
-      y: 0,
-      y_offset: 0.07,
-    };
+  setInterval(() => {
+    // Create 10 particles
+    for (let i = 0; i < 10; i++) {
+      // coords data
+      const coords = {
+        x: Math.getRandomArbitrary(-1, 1), // Random x position for each particle
+        x_offset: 0.005,
+        y: 0,
+        y_offset: 0.07,
+      };
 
-    // supply data to program
-    const { posCount, vao } = supplyDataToProgram(Canvas.gl, program, coords);
+      // supply data to program
+      const { posCount, vao } = supplyDataToProgram(Canvas.gl, program, coords);
 
-    if (!vao) return;
+      if (!vao) return;
 
-    // push particles
-    particles.push({ vao, posCount, xPos: coords.x });
-  }
+      const startTime = performance.now() / 1000;
+      // push particles
+      particles.push({ vao, posCount, xPos: coords.x, startTime });
+    }
+  }, 1000);
 
   // draw the scene
   draw(Canvas.gl, program, particles);
@@ -165,13 +169,13 @@ function draw(
 
     // set current canvas resolution
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
-    // set time for shader animation
-    gl.uniform1f(timeUniform, performance.now() / 1000);
 
     // draw each particle
-    for (const { vao, posCount, xPos } of particles) {
+    for (const { vao, posCount, xPos, startTime } of particles) {
       // set init xPos
       gl.uniform1f(xPosUniform, xPos);
+      // set time for shader animation
+      gl.uniform1f(timeUniform, performance.now() / 1000 - startTime);
 
       // Bind the attribute/buffer set we want.
       gl.bindVertexArray(vao);
