@@ -1,6 +1,7 @@
 import "./style.css";
 import * as Canvas from "./canvas";
 import * as WebGl from "./webgl";
+import { Math } from "./utils";
 
 interface ISetupProgram {
   gl: WebGL2RenderingContext;
@@ -41,7 +42,7 @@ async function init() {
   for (let i = 0; i < 10; i++) {
     // coords data
     const coords = {
-      x: getRandomArbitrary(-1, 1), // Random x position for each particle
+      x: Math.getRandomArbitrary(-1, 1), // Random x position for each particle
       x_offset: 0.005,
       y: 0,
       y_offset: 0.07,
@@ -179,9 +180,5 @@ function draw(
 
   // run the animation
   onAnimate();
-}
-
-function getRandomArbitrary(min: number, max: number) {
-  return Math.random() * (max - min) + min;
 }
 
