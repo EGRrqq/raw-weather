@@ -13,12 +13,19 @@ interface ISetupProgram {
 
 interface IParticleData {
   vao: WebGLVertexArrayObject;
-  posCount: number;
-  xPos: number;
+  positions: number[][];
+  coords: ICoords;
   startTime: number;
 }
 
 interface IParticleCoords {
+  x: number;
+  x_offset: number;
+  y: number;
+  y_offset: number;
+}
+
+interface ICoords {
   x: number;
   x_offset: number;
   y: number;
@@ -44,7 +51,7 @@ async function init() {
     // Create 10 particles
     for (let i = 0; i < 10; i++) {
       // coords data
-      const coords = {
+      const coords: ICoords = {
         x: Math.getRandomArbitrary(-1, 1), // Random x position for each particle
         x_offset: 0.005,
         y: 0,
@@ -52,13 +59,17 @@ async function init() {
       };
 
       // supply data to program
-      const { posCount, vao } = supplyDataToProgram(Canvas.gl, program, coords);
+      const { positions, vao } = supplyDataToProgram(
+        Canvas.gl,
+        program,
+        coords
+      );
 
       if (!vao) return;
 
       const startTime = performance.now() / 1000;
       // push particles
-      particles.push({ vao, posCount, xPos: coords.x, startTime });
+      particles.push({ vao, positions, coords, startTime });
     }
   }, 1000);
 
@@ -137,8 +148,7 @@ function supplyDataToProgram(
     offset
   );
 
-  const posCount = positions.length;
-  return { posCount, vao };
+  return { positions, vao };
 }
 
 function draw(
@@ -171,9 +181,9 @@ function draw(
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
 
     // draw each particle
-    for (const { vao, posCount, xPos, startTime } of particles) {
+    for (const { vao, positions, coords, startTime } of particles) {
       // set init xPos
-      gl.uniform1f(xPosUniform, xPos);
+      gl.uniform1f(xPosUniform, coords.x);
       // set time for shader animation
       gl.uniform1f(timeUniform, performance.now() / 1000 - startTime);
 
@@ -181,7 +191,7 @@ function draw(
       gl.bindVertexArray(vao);
 
       // draw data
-      gl.drawArrays(primitiveType, offset, posCount);
+      gl.drawArrays(primitiveType, offset, positions.length);
     }
 
     // perform an animation
