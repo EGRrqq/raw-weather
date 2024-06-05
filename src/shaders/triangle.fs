@@ -12,25 +12,15 @@ uniform vec2 u_resolution;
 uniform float u_time;
 uniform float u_xPos;
 
-// get time vars from fragment shader
-in float time;
-
 // we need to declare an output for the fragment shader
 out vec4 FragColor;
 
 void main() {
   // st - spatial texture coords
   // normalized coords of current pixel texture
-  // vertical movement + shake on sides
-  // vec2 st = vec2(gl_FragCoord.x - time, gl_FragCoord.y - time) / u_resolution.xy;
-  vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - time) / u_resolution.xy;
+  vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - u_time) / u_resolution.xy;
 
   // border with current frame rate
-  // support shake on sides
-  // - 0.5f ratio added cause border moves too fast
-  // float border = 0.499f - time * 0.5f;
-
-  // border without shake
   float border = 0.499f + u_xPos * 0.5f;
 
   // percentage of shade gradient

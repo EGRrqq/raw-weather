@@ -13,6 +13,7 @@ interface ISetupProgram {
 
 interface IParticleData {
   vao: WebGLVertexArrayObject;
+  positionBuffer: WebGLBuffer;
   positions: number[][];
   coords: ICoords;
   startTime: number;
@@ -59,19 +60,19 @@ async function init() {
       };
 
       // supply data to program
-      const { positions, vao } = supplyDataToProgram(
-        Canvas.gl,
+      const { positionBuffer, positions, vao } = supplyDataToProgram(
+        Canvas.gl!,
         program,
         coords
       );
 
-      if (!vao) return;
+      if (!vao || !positionBuffer) return;
 
       const startTime = performance.now() / 1000;
       // push particles
-      particles.push({ vao, positions, coords, startTime });
+      particles.push({ vao, positionBuffer, positions, coords, startTime });
     }
-  }, 1000);
+  }, 250);
 
   // draw the scene
   draw(Canvas.gl, program, particles);
@@ -148,7 +149,7 @@ function supplyDataToProgram(
     offset
   );
 
-  return { positions, vao };
+  return { positions, positionBuffer, vao };
 }
 
 function draw(
@@ -181,17 +182,38 @@ function draw(
     gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
 
     // draw each particle
-    for (const { vao, positions, coords, startTime } of particles) {
-      // set init xPos
-      gl.uniform1f(xPosUniform, coords.x);
-      // set time for shader animation
-      gl.uniform1f(timeUniform, performance.now() / 1000 - startTime);
+    for (let i = 0; i < particles.length; i++) {
+      const { vao, positionBuffer, positions, coords, startTime } =
+        particles[i];
 
-      // Bind the attribute/buffer set we want.
-      gl.bindVertexArray(vao);
+      // particle frame rate
+      const time = () => performance.now() / 1000 - startTime;
 
-      // draw data
-      gl.drawArrays(primitiveType, offset, positions.length);
+      // calc particle height
+      const height = coords.y_offset * 2;
+      // calc current particle y coord
+      const y = -time() - height;
+
+      // If the particle is out of the canvas
+      if (y < -1) {
+        // remove it from the particles array
+        particles.splice(i, 1);
+
+        // delete VAO and buffer to free up memory
+        gl.deleteVertexArray(vao);
+        gl.deleteBuffer(positionBuffer);
+      } else {
+        // set init xPos
+        gl.uniform1f(xPosUniform, coords.x);
+        // set time for shader animation
+        gl.uniform1f(timeUniform, time());
+
+        // Bind the attribute/buffer set we want.
+        gl.bindVertexArray(vao);
+
+        // draw data
+        gl.drawArrays(primitiveType, offset, positions.length);
+      }
     }
 
     // perform an animation
