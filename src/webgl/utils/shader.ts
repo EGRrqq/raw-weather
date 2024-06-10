@@ -4,7 +4,9 @@ function createAndValidateShader(
   source: string
 ) {
   const shader = createShader(gl, type, source);
-  if (shader) return validateShader(gl, shader);
+
+  if (!shader) throw new Error(`Failed to create ${type} shader`);
+  return validateShader(gl, shader);
 }
 
 // type stands for shader type vertex/fragment

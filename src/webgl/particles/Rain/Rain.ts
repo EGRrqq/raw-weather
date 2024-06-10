@@ -26,7 +26,6 @@ export default class Rain {
       paths,
     });
 
-    if (!program) return;
     // Store the state of each particle
     const particles: IParticleData[] = [];
 
@@ -48,8 +47,6 @@ export default class Rain {
             program,
             coords,
           });
-
-        if (!vao || !positionBuffer) return;
 
         const startTime = performance.now() / 1000;
         // push particles

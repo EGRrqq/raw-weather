@@ -29,7 +29,7 @@ type TDraw = ({ gl, particles, program }: IDrawProps) => void;
 type TSetupProgram = ({
   gl,
   paths,
-}: ISetupProgramProps) => Promise<WebGLProgram | undefined>;
+}: ISetupProgramProps) => Promise<WebGLProgram>;
 
 type TSupplyDataToProgram = ({
   gl,

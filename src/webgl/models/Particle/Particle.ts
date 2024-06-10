@@ -72,12 +72,10 @@ export class Particle implements IParticle {
   };
 
   setupProgram: IParticle["setupProgram"] = async ({ gl, paths }) => {
-    // create shaders
-    const [vertSource, fragSource] = await Promise.all([
-      fetch(paths.vsPath).then((res) => res.text()),
-      fetch(paths.fsPath).then((res) => res.text()),
-    ]);
+    // fetch shader from sources
+    const { vertSource, fragSource } = await WebGl.fetchShaders(paths);
 
+    // create shaders
     const vertexShader = WebGl.createShader(gl, gl.VERTEX_SHADER, vertSource);
     const fragmentShader = WebGl.createShader(
       gl,
@@ -86,7 +84,6 @@ export class Particle implements IParticle {
     );
 
     // create program
-    if (!vertexShader || !fragmentShader) return;
     const program = WebGl.createProgram(gl, vertexShader, fragmentShader);
 
     return program;

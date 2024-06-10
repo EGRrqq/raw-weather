@@ -4,7 +4,9 @@ function createAndValidateProgram(
   fragmentShader: WebGLShader
 ) {
   const program = createProgram(gl, vertexShader, fragmentShader);
-  if (program) return validateProgram(gl, program);
+
+  if (!program) throw new Error("Failed to create program");
+  return validateProgram(gl, program);
 }
 
 function createProgram(
