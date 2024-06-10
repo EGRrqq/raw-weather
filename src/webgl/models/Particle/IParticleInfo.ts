@@ -1,11 +1,3 @@
-export interface ISetupProgram {
-  gl: WebGL2RenderingContext;
-  paths: {
-    vsPath: string;
-    fsPath: string;
-  };
-}
-
 export interface IParticleData {
   vao: WebGLVertexArrayObject;
   positionBuffer: WebGLBuffer;

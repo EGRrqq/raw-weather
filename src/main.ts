@@ -1,5 +1,6 @@
 import "./style.css";
-import * as Rain from "./webgl/particles/Rain";
+import Rain from "./webgl/particles/Rain/Rain";
 
-window.addEventListener("DOMContentLoaded", Rain.init, { once: true });
+const RainParticle = new Rain();
+window.addEventListener("DOMContentLoaded", RainParticle.init, { once: true });
 
