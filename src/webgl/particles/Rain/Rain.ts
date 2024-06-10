@@ -1,11 +1,11 @@
 import { Math } from "../../../utils";
 import * as Canvas from "../../../canvas";
 import IPaths from "../../utils/interfaces/IPaths";
-import { Particle } from "../../models/Particle/Particle";
 import {
   IParticleCoords,
   IParticleData,
-} from "../../models/Particle/IParticleInfo";
+  Particle,
+} from "../../models/Particle";
 
 export default class Rain {
   RainParticle: Particle;
@@ -15,7 +15,6 @@ export default class Rain {
   }
 
   init = async () => {
-    if (!Canvas.gl) return;
     // setup GLSL program
     const paths: IPaths = {
       vsPath: "./webgl/shaders/triangle.vs",
@@ -43,7 +42,7 @@ export default class Rain {
         // supply data to program
         const { positionBuffer, positions, vao } =
           this.RainParticle.supplyDataToProgram({
-            gl: Canvas.gl!,
+            gl: Canvas.gl,
             program,
             coords,
           });
