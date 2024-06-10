@@ -18,8 +18,8 @@ export default class Rain {
     if (!Canvas.gl) return;
     // setup GLSL program
     const paths: IPaths = {
-      vsPath: "./shaders/triangle.vs",
-      fsPath: "./shaders/triangle.fs",
+      vsPath: "./webgl/shaders/triangle.vs",
+      fsPath: "./webgl/shaders/triangle.fs",
     };
     const program = await this.RainParticle.setupProgram({
       gl: Canvas.gl,
