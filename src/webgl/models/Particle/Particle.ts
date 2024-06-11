@@ -146,8 +146,6 @@ export class Particle implements IParticle {
       offset
     );
 
-    // --- good idea to move it into decorator/mixin ---
-    // --- smth like @isValidate ---
     // check if vao and pos buffer are created
     if (!vao) throw new Error("Failed to create vao");
     if (!positionBuffer) throw new Error("Failed to create position buffer");
