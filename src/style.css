@@ -6,6 +6,18 @@
   padding: 0;
 }
 
+/* 
+  without html styles
+  Canvas.resizeData func 
+  will shrink aside elem width to zero
+  now it moves outside the window
+  and hide via overflow prop
+*/
+html {
+  display: flex;
+  overflow: hidden;
+}
+
 body {
   display: flex;
   min-height: 100dvh;
@@ -13,5 +25,12 @@ body {
 
 main {
   display: flex;
+}
+
+aside {
+  resize: horizontal;
+  overflow: auto;
+
+  border: solid;
 }
 
