@@ -2,6 +2,9 @@ import * as WebGl from "../../utils";
 import * as Canvas from "../../../canvas";
 import IParticle from "./IParticle";
 
+import vertSource from "../../../webgl/shaders/triangle.vs";
+import fragSource from "../../../webgl/shaders/triangle.fs";
+
 export class Particle implements IParticle {
   draw: IParticle["draw"] = ({ gl, particles, program }) => {
     // Tell it to use our program (pair of shaders)
@@ -71,10 +74,7 @@ export class Particle implements IParticle {
     onAnimate();
   };
 
-  setupProgram: IParticle["setupProgram"] = async ({ gl, paths }) => {
-    // fetch shader from sources
-    const { vertSource, fragSource } = await WebGl.fetchShaders(paths);
-
+  setupProgram: IParticle["setupProgram"] = async ({ gl }) => {
     // create shaders
     const vertexShader = WebGl.createShader(gl, gl.VERTEX_SHADER, vertSource);
     const fragmentShader = WebGl.createShader(
