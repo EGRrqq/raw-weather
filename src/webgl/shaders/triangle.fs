@@ -5,12 +5,9 @@
 precision highp float;
 
 vec4 mainColor = vec4(0.0f, 0.7f, 1.0f, 1.0f);
-vec4 shadeColorF = vec4(0.0f, 0.59f, 0.84f, 1.0f);
-vec4 shadeColorS = vec4(0.0f, 0.5f, 0.7f, 1.0f);
 
-uniform vec2 u_resolution;
-uniform float u_time;
-uniform float u_xPos;
+// uniform vec2 u_resolution;
+// uniform float u_time;
 
 // we need to declare an output for the fragment shader
 out vec4 FragColor;
@@ -18,20 +15,8 @@ out vec4 FragColor;
 void main() {
   // st - spatial texture coords
   // normalized coords of current pixel texture
-  vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - u_time) / u_resolution.xy;
+  // vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - u_time) / u_resolution.xy;
 
-  // border with current frame rate
-  float border = 0.499f + u_xPos * 0.5f;
-
-  // percentage of shade gradient
-  float pct = abs(sin(u_time * 0.25f));
-
-  // check if the pixel in a border range
-  if(st.x < border) {
-    // mix the two shade colors for border
-    FragColor = mix(shadeColorF, shadeColorS, pct);
-  } else {
     // draw main shader color
-    FragColor = mainColor;
-  }
+  FragColor = mainColor;
 }

@@ -16,7 +16,6 @@ export class Particle implements IParticle {
     // set uniform vars
     const canvasResUniform = gl.getUniformLocation(program, "u_resolution");
     const timeUniform = gl.getUniformLocation(program, "u_time");
-    const xPosUniform = gl.getUniformLocation(program, "u_xPos");
 
     // draw settings
     const primitiveType = gl.LINES;
@@ -53,8 +52,6 @@ export class Particle implements IParticle {
           gl.deleteVertexArray(vao);
           gl.deleteBuffer(positionBuffer);
         } else {
-          // set init xPos
-          gl.uniform1f(xPosUniform, coords.x);
           // set time for shader animation
           gl.uniform1f(timeUniform, time());
 
