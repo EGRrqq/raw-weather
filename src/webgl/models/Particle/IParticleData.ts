@@ -1,15 +1,10 @@
+import { IOffsetCoords } from "../../interfaces/ICoords";
+
 export interface IParticleData {
   vao: WebGLVertexArrayObject;
   positionBuffer: WebGLBuffer;
   positions: number[][];
-  coords: IParticleCoords;
+  coords: IOffsetCoords;
   startTime: number;
-}
-
-export interface IParticleCoords {
-  x: number;
-  x_offset: number;
-  y: number;
-  y_offset: number;
 }
 

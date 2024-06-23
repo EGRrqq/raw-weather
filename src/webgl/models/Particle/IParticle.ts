@@ -1,8 +1,8 @@
-import IPaths from "../../utils/interfaces/IPaths";
-import { IParticleCoords, IParticleData } from "./IParticleInfo";
+import IPaths from "../../interfaces/IPaths";
+import { IParticleData } from "./IParticleData";
 
 // main particle interface
-interface IParticle {
+export default interface IParticle {
   draw: TDraw;
   setupProgram: TSetupProgram;
   supplyDataToProgram: TSupplyDataToProgram;
@@ -20,21 +20,15 @@ interface ISetupProgramProps {
 
 interface ISupplyDataToProgramProps {
   program: WebGLProgram;
-  coords: IParticleCoords;
+  coords: IParticleData["coords"];
 }
 
-// types for particle functions based on props
-type TDraw = ({ particles, program }: IDrawProps) => void;
+// types for particle functions
+type TDraw = (props: IDrawProps) => void;
 
-type TSetupProgram = ({ paths }: ISetupProgramProps) => Promise<WebGLProgram>;
+type TSetupProgram = (props: ISetupProgramProps) => Promise<WebGLProgram>;
 
-type TSupplyDataToProgram = ({
-  coords,
-  program,
-}: ISupplyDataToProgramProps) => Pick<
-  IParticleData,
-  "positions" | "positionBuffer" | "vao"
->;
-
-export { type IParticle as default };
+type TSupplyDataToProgram = (
+  props: ISupplyDataToProgramProps
+) => Pick<IParticleData, "positions" | "positionBuffer" | "vao">;
 

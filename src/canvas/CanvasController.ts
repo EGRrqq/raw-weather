@@ -19,16 +19,16 @@ export class CanvasController implements ICanvasController {
   }
 
   // functions to work with canvas data
-  clearData(gl: WebGL2RenderingContext) {
+  clearData: ICanvasController["clearData"] = ({ gl }) => {
     gl.clearColor(0, 0, 0, 0);
     gl.clear(this.gl.COLOR_BUFFER_BIT);
-  }
+  };
 
-  resizeData(gl: WebGL2RenderingContext) {
+  resizeData: ICanvasController["resizeData"] = ({ gl, initCoords }) => {
     this.#resizeCanvasToDisplaySize(this.#canvas);
     // Tell WebGL how to convert from clip space to pixels
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  }
+    gl.viewport(initCoords.x, initCoords.y, gl.canvas.width, gl.canvas.height);
+  };
 
   #resizeCanvasToDisplaySize(canvas: HTMLCanvasElement): boolean {
     // lookup the size of canvas in css pixels

@@ -1,11 +1,7 @@
 import { Math } from "../../../utils";
 import Canvas from "../../../canvas";
-import IPaths from "../../utils/interfaces/IPaths";
-import {
-  IParticleCoords,
-  IParticleData,
-  Particle,
-} from "../../models/Particle";
+import IPaths from "../../interfaces/IPaths";
+import { IParticleData, Particle } from "../../models/Particle";
 
 export default class Rain {
   RainParticle: Particle;
@@ -31,7 +27,7 @@ export default class Rain {
       // Create 10 particles
       for (let i = 0; i < 10; i++) {
         // coords data
-        const coords: IParticleCoords = {
+        const coords: IParticleData["coords"] = {
           x: Math.getRandomArbitrary(-1, 1), // Random x position for each particle
           x_offset: 0.005,
           y: 0,
