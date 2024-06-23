@@ -1,38 +1,34 @@
 import IPaths from "../../utils/interfaces/IPaths";
 import { IParticleCoords, IParticleData } from "./IParticleInfo";
 
+// main particle interface
 interface IParticle {
   draw: TDraw;
   setupProgram: TSetupProgram;
   supplyDataToProgram: TSupplyDataToProgram;
 }
 
+// props for particle functions
 interface IDrawProps {
-  gl: WebGL2RenderingContext;
   program: WebGLProgram;
   particles: IParticleData[];
 }
 
 interface ISetupProgramProps {
-  gl: WebGL2RenderingContext;
   paths: IPaths;
 }
 
 interface ISupplyDataToProgramProps {
-  gl: WebGL2RenderingContext;
   program: WebGLProgram;
   coords: IParticleCoords;
 }
 
-type TDraw = ({ gl, particles, program }: IDrawProps) => void;
+// types for particle functions based on props
+type TDraw = ({ particles, program }: IDrawProps) => void;
 
-type TSetupProgram = ({
-  gl,
-  paths,
-}: ISetupProgramProps) => Promise<WebGLProgram>;
+type TSetupProgram = ({ paths }: ISetupProgramProps) => Promise<WebGLProgram>;
 
 type TSupplyDataToProgram = ({
-  gl,
   coords,
   program,
 }: ISupplyDataToProgramProps) => Pick<

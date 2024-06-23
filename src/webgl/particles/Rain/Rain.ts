@@ -1,5 +1,5 @@
 import { Math } from "../../../utils";
-import * as Canvas from "../../../canvas";
+import Canvas from "../../../canvas";
 import IPaths from "../../utils/interfaces/IPaths";
 import {
   IParticleCoords,
@@ -11,7 +11,7 @@ export default class Rain {
   RainParticle: Particle;
 
   constructor() {
-    this.RainParticle = new Particle();
+    this.RainParticle = new Particle(Canvas);
   }
 
   init = async () => {
@@ -21,7 +21,6 @@ export default class Rain {
       fsPath: "./webgl/shaders/triangle.fs",
     };
     const program = await this.RainParticle.setupProgram({
-      gl: Canvas.gl,
       paths,
     });
 
@@ -42,7 +41,6 @@ export default class Rain {
         // supply data to program
         const { positionBuffer, positions, vao } =
           this.RainParticle.supplyDataToProgram({
-            gl: Canvas.gl,
             program,
             coords,
           });
@@ -54,7 +52,7 @@ export default class Rain {
     }, 250);
 
     // draw the scene
-    this.RainParticle.draw({ gl: Canvas.gl, program, particles });
+    this.RainParticle.draw({ program, particles });
   };
 }
 

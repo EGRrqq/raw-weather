@@ -1,34 +1,52 @@
 import * as WebGl from "../../utils";
-import * as Canvas from "../../../canvas";
+import { ICanvasController } from "../../../canvas/ICanvasController";
 import IParticle from "./IParticle";
 
 import vertSource from "../../../webgl/shaders/triangle.vs";
 import fragSource from "../../../webgl/shaders/triangle.fs";
 
 export class Particle implements IParticle {
-  draw: IParticle["draw"] = ({ gl, particles, program }) => {
+  // declare constants
+  #canvas: ICanvasController;
+  #gl: WebGL2RenderingContext;
+
+  constructor(canvasController: ICanvasController) {
+    // assign canvas controller
+    this.#canvas = canvasController;
+    // get instance of gl context only once
+    this.#gl = this.#canvas.gl;
+  }
+
+  draw: IParticle["draw"] = ({ particles, program }) => {
     // Tell it to use our program (pair of shaders)
-    gl.useProgram(program);
+    this.#gl.useProgram(program);
 
     // set a line width
-    gl.lineWidth(7);
+    this.#gl.lineWidth(7);
 
     // set uniform vars
-    const canvasResUniform = gl.getUniformLocation(program, "u_resolution");
-    const timeUniform = gl.getUniformLocation(program, "u_time");
+    const canvasResUniform = this.#gl.getUniformLocation(
+      program,
+      "u_resolution"
+    );
+    const timeUniform = this.#gl.getUniformLocation(program, "u_time");
 
     // draw settings
-    const primitiveType = gl.LINES;
+    const primitiveType = this.#gl.LINES;
     const offset = 0;
 
     const onAnimate = () => {
       // handle canvas resize
-      Canvas.resizeData(gl);
+      this.#canvas.resizeData(this.#gl);
       // clear canvas
-      Canvas.clearData(gl);
+      this.#canvas.clearData(this.#gl);
 
       // set current canvas resolution
-      gl.uniform2f(canvasResUniform, gl.canvas.width, gl.canvas.height);
+      this.#gl.uniform2f(
+        canvasResUniform,
+        this.#gl.canvas.width,
+        this.#gl.canvas.height
+      );
 
       // draw each particle
       for (let i = 0; i < particles.length; i++) {
@@ -49,17 +67,17 @@ export class Particle implements IParticle {
           particles.splice(i, 1);
 
           // delete VAO and buffer to free up memory
-          gl.deleteVertexArray(vao);
-          gl.deleteBuffer(positionBuffer);
+          this.#gl.deleteVertexArray(vao);
+          this.#gl.deleteBuffer(positionBuffer);
         } else {
           // set time for shader animation
-          gl.uniform1f(timeUniform, time());
+          this.#gl.uniform1f(timeUniform, time());
 
           // Bind the attribute/buffer set we want.
-          gl.bindVertexArray(vao);
+          this.#gl.bindVertexArray(vao);
 
           // draw data
-          gl.drawArrays(primitiveType, offset, positions.length);
+          this.#gl.drawArrays(primitiveType, offset, positions.length);
         }
       }
 
@@ -71,35 +89,38 @@ export class Particle implements IParticle {
     onAnimate();
   };
 
-  setupProgram: IParticle["setupProgram"] = async ({ gl }) => {
+  setupProgram: IParticle["setupProgram"] = async () => {
     // create shaders
-    const vertexShader = WebGl.createShader(gl, gl.VERTEX_SHADER, vertSource);
+    const vertexShader = WebGl.createShader(
+      this.#gl,
+      this.#gl.VERTEX_SHADER,
+      vertSource
+    );
     const fragmentShader = WebGl.createShader(
-      gl,
-      gl.FRAGMENT_SHADER,
+      this.#gl,
+      this.#gl.FRAGMENT_SHADER,
       fragSource
     );
 
     // create program
-    const program = WebGl.createProgram(gl, vertexShader, fragmentShader);
+    const program = WebGl.createProgram(this.#gl, vertexShader, fragmentShader);
 
     return program;
   };
 
   supplyDataToProgram: IParticle["supplyDataToProgram"] = ({
-    gl,
     coords,
     program,
   }) => {
     // look up where the vertex data needs to go.
     // always do during the init, not in render loop
-    const positionAttributeLocation = gl.getAttribLocation(
+    const positionAttributeLocation = this.#gl.getAttribLocation(
       program,
       "a_position"
     );
     // attribute get their data from buffer
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const positionBuffer = this.#gl.createBuffer();
+    this.#gl.bindBuffer(this.#gl.ARRAY_BUFFER, positionBuffer);
 
     // coords data
     const { x, x_offset, y, y_offset } = coords;
@@ -115,26 +136,26 @@ export class Particle implements IParticle {
       [x + x_offset, y + y_offset],
       [x, y - y_offset],
     ];
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
+    this.#gl.bufferData(
+      this.#gl.ARRAY_BUFFER,
       new Float32Array(positions.flat()),
-      gl.STATIC_DRAW
+      this.#gl.STATIC_DRAW
     );
 
     // attribute state
-    const vao = gl.createVertexArray();
-    gl.bindVertexArray(vao);
+    const vao = this.#gl.createVertexArray();
+    this.#gl.bindVertexArray(vao);
 
     // tells webgl that we want to get data out of buffer
-    gl.enableVertexAttribArray(positionAttributeLocation);
+    this.#gl.enableVertexAttribArray(positionAttributeLocation);
 
     // tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     const size = positions[0].length; // 2 components per iteration
-    const type = gl.FLOAT; // the data is 32bit floats
+    const type = this.#gl.FLOAT; // the data is 32bit floats
     const normalize = false; // don't normalize the data
     const stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
     const offset = 0; // start at the beginning of the buffer
-    gl.vertexAttribPointer(
+    this.#gl.vertexAttribPointer(
       positionAttributeLocation,
       size,
       type,
