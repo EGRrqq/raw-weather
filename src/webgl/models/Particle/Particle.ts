@@ -1,10 +1,10 @@
-import * as WebGl from "../../utils";
-import ICanvasController from "../../../elements/canvas/ICanvasController";
+import * as WebGl from "@/webgl/utils";
+import ICanvasController from "@/elements/canvas/ICanvasController";
 import IParticle from "./IParticle";
-import { ICoords } from "../../interfaces/ICoords";
 
-import vertSource from "../../../webgl/shaders/triangle.vs";
-import fragSource from "../../../webgl/shaders/triangle.fs";
+import { ICoords } from "@/webgl/interfaces/ICoords";
+import vertSource from "@/webgl/shaders/triangle.vs";
+import fragSource from "@/webgl/shaders/triangle.fs";
 
 export class Particle implements IParticle {
   // declare constants

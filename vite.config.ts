@@ -1,5 +1,8 @@
-import glsl from "vite-plugin-glsl";
 import { defineConfig } from "vite";
+
+// plugins
+import glsl from "vite-plugin-glsl";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   root: "src",
@@ -8,6 +11,6 @@ export default defineConfig({
     assetsDir: "",
   },
   base: "/raw-weather/",
-  plugins: [glsl()],
+  plugins: [glsl(), tsconfigPaths()],
 });
 

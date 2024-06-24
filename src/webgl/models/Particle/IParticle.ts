@@ -1,4 +1,4 @@
-import IPaths from "../../interfaces/IPaths";
+import IPaths from "@/webgl/interfaces/IPaths";
 import { IParticleData } from "./IParticleData";
 
 // main particle interface

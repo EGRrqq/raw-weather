@@ -1,7 +1,7 @@
-import { Math } from "../../../../utils";
-import Canvas from "../../../../elements/canvas";
-import IPaths from "../../../interfaces/IPaths";
-import { IParticleData, Particle } from "../../../models/Particle";
+import { Math } from "@/utils";
+import Canvas from "@/elements/canvas";
+import IPaths from "@/webgl/interfaces/IPaths";
+import { IParticleData, Particle } from "@/webgl/models/Particle";
 
 export default class Rain {
   RainParticle: Particle;
