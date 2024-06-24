@@ -1,4 +1,4 @@
-import { ICanvasController } from "./ICanvasController";
+import ICanvasController from "./ICanvasController";
 
 export class CanvasController implements ICanvasController {
   // getters with appropriate error handling
