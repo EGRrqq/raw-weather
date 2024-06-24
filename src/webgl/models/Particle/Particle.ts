@@ -1,5 +1,5 @@
 import * as WebGl from "../../utils";
-import ICanvasController from "../../../canvas/ICanvasController";
+import ICanvasController from "../../../elements/canvas/ICanvasController";
 import IParticle from "./IParticle";
 import { ICoords } from "../../interfaces/ICoords";
 

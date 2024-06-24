@@ -1,4 +1,4 @@
-import { ICoords } from "../webgl/interfaces/ICoords";
+import { ICoords } from "../../webgl/interfaces/ICoords";
 
 export default interface ICanvasController {
   gl: WebGL2RenderingContext;
