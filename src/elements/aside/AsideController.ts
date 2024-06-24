@@ -1,10 +1,16 @@
+import { CanvasController } from "@/elements/canvas/CanvasController";
+import { ICoords } from "@/webgl/interfaces/ICoords";
+
 export class AsideController {
   #observer: ResizeObserver;
+  initCoords: ICoords = { x: 0, y: 0 };
 
-  constructor() {
-    // create observer
-    this.#observer = new ResizeObserver(this.#init);
-    // observe aside elem
+  constructor(canvasController: CanvasController) {
+    // set init coords
+    this.#updateInitCoords();
+
+    // resize canvas on aside resize
+    this.#observer = new ResizeObserver(() => this.#init(canvasController));
     this.#observer.observe(this.#aside);
   }
 
@@ -18,8 +24,20 @@ export class AsideController {
     return aside;
   }
 
-  #init = () => {
-    console.log("buh");
+  #updateInitCoords = () => {
+    this.initCoords.x = -this.#aside.clientWidth / 2;
+  };
+
+  #init = (canvasController: CanvasController) => {
+    // update init coords
+    this.#updateInitCoords();
+
+    // get gl only once
+    const { gl } = canvasController;
+    // handle canvas resize
+    canvasController.resizeData({ gl });
+    // clear canvas
+    canvasController.clearData({ gl });
   };
 }
 

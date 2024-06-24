@@ -2,6 +2,7 @@ import { ICoords } from "../../webgl/interfaces/ICoords";
 
 export default interface ICanvasController {
   gl: WebGL2RenderingContext;
+  initCoords: ICoords;
 
   clearData: TClearData;
   resizeData: TResizeData;
@@ -13,7 +14,6 @@ interface IClearDataProps {
 }
 interface IResizeDataProps {
   gl: WebGL2RenderingContext;
-  initCoords: ICoords;
 }
 
 // types for canvas functions

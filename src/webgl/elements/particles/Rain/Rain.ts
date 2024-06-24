@@ -1,13 +1,13 @@
 import { Math } from "@/utils";
-import Canvas from "@/elements/canvas";
+import ICanvasController from "@/elements/canvas/ICanvasController";
 import IPaths from "@/webgl/interfaces/IPaths";
 import { IParticleData, Particle } from "@/webgl/models/Particle";
 
 export default class Rain {
   RainParticle: Particle;
 
-  constructor() {
-    this.RainParticle = new Particle(Canvas);
+  constructor(CanvasController: ICanvasController) {
+    this.RainParticle = new Particle(CanvasController);
   }
 
   init = async () => {

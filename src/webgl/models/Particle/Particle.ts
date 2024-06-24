@@ -2,7 +2,6 @@ import * as WebGl from "@/webgl/utils";
 import ICanvasController from "@/elements/canvas/ICanvasController";
 import IParticle from "./IParticle";
 
-import { ICoords } from "@/webgl/interfaces/ICoords";
 import vertSource from "@/webgl/shaders/triangle.vs";
 import fragSource from "@/webgl/shaders/triangle.fs";
 
@@ -10,15 +9,12 @@ export class Particle implements IParticle {
   // declare constants
   #canvas: ICanvasController;
   #gl: WebGL2RenderingContext;
-  #initCoords: ICoords = { x: 0, y: 0 };
 
-  constructor(canvasController: ICanvasController, initCoords?: ICoords) {
+  constructor(canvasController: ICanvasController) {
     // assign canvas controller
     this.#canvas = canvasController;
     // get instance of gl context only once
     this.#gl = this.#canvas.gl;
-    // assign init coords if provided
-    if (initCoords) this.#initCoords = initCoords;
   }
 
   draw: IParticle["draw"] = ({ particles, program }) => {
@@ -41,7 +37,7 @@ export class Particle implements IParticle {
 
     const onAnimate = () => {
       // handle canvas resize
-      this.#canvas.resizeData({ gl: this.#gl, initCoords: this.#initCoords });
+      this.#canvas.resizeData({ gl: this.#gl });
       // clear canvas
       this.#canvas.clearData({ gl: this.#gl });
 
