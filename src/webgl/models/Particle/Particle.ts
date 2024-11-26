@@ -1,9 +1,6 @@
-import * as WebGl from "@/webgl/utils";
 import type ICanvasController from "@/elements/canvas/ICanvasController";
+import * as WebGl from "@/webgl/utils";
 import type IParticle from "./IParticle";
-
-import vertSource from "@/webgl/shaders/triangle.vs";
-import fragSource from "@/webgl/shaders/triangle.fs";
 
 export class Particle implements IParticle {
 	// declare constants
@@ -89,17 +86,17 @@ export class Particle implements IParticle {
 		onAnimate();
 	};
 
-	setupProgram: IParticle["setupProgram"] = async () => {
+	setupProgram: IParticle["setupProgram"] = async ({ source }) => {
 		// create shaders
 		const vertexShader = WebGl.createShader(
 			this.#gl,
 			this.#gl.VERTEX_SHADER,
-			vertSource,
+			source.vSource,
 		);
 		const fragmentShader = WebGl.createShader(
 			this.#gl,
 			this.#gl.FRAGMENT_SHADER,
-			fragSource,
+			source.fSource,
 		);
 
 		// create program

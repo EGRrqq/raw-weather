@@ -1,4 +1,4 @@
-import type IPaths from "@/webgl/interfaces/IPaths";
+import type ISource from "@/webgl/interfaces/IPaths";
 import type { IParticleData } from "./IParticleData";
 
 // main particle interface
@@ -15,7 +15,7 @@ interface IDrawProps {
 }
 
 interface ISetupProgramProps {
-	paths: IPaths;
+	source: ISource;
 }
 
 interface ISupplyDataToProgramProps {

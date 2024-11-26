@@ -1,6 +1,9 @@
 import type ICanvasController from "@/elements/canvas/ICanvasController";
-import type IPaths from "@/webgl/interfaces/IPaths";
+import type ISource from "@/webgl/interfaces/IPaths";
 import { type IParticleData, Particle } from "@/webgl/models/Particle";
+
+import fSource from "@/webgl/shaders/rain/triangle.fs";
+import vSource from "@/webgl/shaders/rain/triangle.vs";
 
 export default class Rain {
 	RainParticle: Particle;
@@ -11,12 +14,12 @@ export default class Rain {
 
 	init = async () => {
 		// setup GLSL program
-		const paths: IPaths = {
-			vsPath: "./webgl/shaders/triangle.vs",
-			fsPath: "./webgl/shaders/triangle.fs",
+		const paths: ISource = {
+			vSource,
+			fSource,
 		};
 		const program = await this.RainParticle.setupProgram({
-			paths,
+			source: paths,
 		});
 
 		// Store the state of each particle

@@ -1,4 +1,4 @@
-export default interface IPaths {
-	vsPath: string;
-	fsPath: string;
+export default interface ISource {
+	vSource: string;
+	fSource: string;
 }
