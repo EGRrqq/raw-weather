@@ -32,7 +32,7 @@ export default class Rain {
 				const coords: IParticleData["coords"] = {
 					x: Math.randomArbitrary(-1, 1), // Random x position for each particle
 					x_offset: 0.005,
-					y: 0,
+					y: 1,
 					y_offset: 0.07,
 				};
 
