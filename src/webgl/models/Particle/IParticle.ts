@@ -1,5 +1,5 @@
-import IPaths from "@/webgl/interfaces/IPaths";
-import { IParticleData } from "./IParticleData";
+import type IPaths from "@/webgl/interfaces/IPaths";
+import type { IParticleData } from "./IParticleData";
 
 // main particle interface
 export default interface IParticle {

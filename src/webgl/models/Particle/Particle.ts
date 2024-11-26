@@ -1,6 +1,6 @@
 import * as WebGl from "@/webgl/utils";
-import ICanvasController from "@/elements/canvas/ICanvasController";
-import IParticle from "./IParticle";
+import type ICanvasController from "@/elements/canvas/ICanvasController";
+import type IParticle from "./IParticle";
 
 import vertSource from "@/webgl/shaders/triangle.vs";
 import fragSource from "@/webgl/shaders/triangle.fs";

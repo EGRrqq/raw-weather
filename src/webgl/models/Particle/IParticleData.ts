@@ -1,4 +1,4 @@
-import { IOffsetCoords } from "@/webgl/interfaces/ICoords";
+import type { IOffsetCoords } from "@/webgl/interfaces/ICoords";
 
 export interface IParticleData {
 	vao: WebGLVertexArrayObject;
