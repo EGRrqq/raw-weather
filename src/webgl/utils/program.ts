@@ -1,43 +1,42 @@
 function createAndValidateProgram(
-  gl: WebGL2RenderingContext,
-  vertexShader: WebGLShader,
-  fragmentShader: WebGLShader
+	gl: WebGL2RenderingContext,
+	vertexShader: WebGLShader,
+	fragmentShader: WebGLShader,
 ) {
-  const program = createProgram(gl, vertexShader, fragmentShader);
+	const program = createProgram(gl, vertexShader, fragmentShader);
 
-  if (!program) throw new Error("Failed to create program");
-  return validateProgram(gl, program);
+	if (!program) throw new Error("Failed to create program");
+	return validateProgram(gl, program);
 }
 
 function createProgram(
-  gl: WebGL2RenderingContext,
-  vertexShader: WebGLShader,
-  fragmentShader: WebGLShader
+	gl: WebGL2RenderingContext,
+	vertexShader: WebGLShader,
+	fragmentShader: WebGLShader,
 ) {
-  const program = gl.createProgram();
+	const program = gl.createProgram();
 
-  if (program) {
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
+	if (program) {
+		gl.attachShader(program, vertexShader);
+		gl.attachShader(program, fragmentShader);
 
-    gl.linkProgram(program);
+		gl.linkProgram(program);
 
-    return program;
-  }
+		return program;
+	}
 }
 
 function validateProgram(gl: WebGL2RenderingContext, program: WebGLProgram) {
-  const success = gl.getProgramParameter(program, gl.LINK_STATUS);
+	const success = gl.getProgramParameter(program, gl.LINK_STATUS);
 
-  if (!success) {
-    const programLog = gl.getProgramInfoLog(program);
-    gl.deleteProgram(program);
+	if (!success) {
+		const programLog = gl.getProgramInfoLog(program);
+		gl.deleteProgram(program);
 
-    throw new Error(`program failed to link: ${programLog}`);
-  }
+		throw new Error(`program failed to link: ${programLog}`);
+	}
 
-  return program;
+	return program;
 }
 
 export default createAndValidateProgram;
-

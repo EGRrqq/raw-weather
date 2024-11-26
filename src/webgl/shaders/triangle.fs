@@ -17,6 +17,6 @@ void main() {
   // normalized coords of current pixel texture
   // vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - u_time) / u_resolution.xy;
 
-    // draw main shader color
+  // draw main shader color
   FragColor = mainColor;
 }

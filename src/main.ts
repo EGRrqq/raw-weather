@@ -4,4 +4,3 @@ import AsideSettings from "@/elements/aside";
 
 AsideSettings;
 window.addEventListener("DOMContentLoaded", RainParticle.init, { once: true });
-

@@ -1,9 +1,9 @@
 *,
 *::before,
 *::after {
-  margin: 0;
-  border: 0;
-  padding: 0;
+	margin: 0;
+	border: 0;
+	padding: 0;
 }
 
 /* 
@@ -14,23 +14,22 @@
   and hide via overflow prop
 */
 html {
-  display: flex;
-  overflow: hidden;
+	display: flex;
+	overflow: hidden;
 }
 
 body {
-  display: flex;
-  min-height: 100dvh;
+	display: flex;
+	min-height: 100dvh;
 }
 
 main {
-  display: flex;
+	display: flex;
 }
 
 aside {
-  resize: horizontal;
-  overflow: auto;
+	resize: horizontal;
+	overflow: auto;
 
-  border: solid;
+	border: solid;
 }
-

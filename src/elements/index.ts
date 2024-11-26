@@ -5,4 +5,3 @@ import Canvas from "./canvas";
 Canvas.initCoords = AsideSettings.initCoords;
 
 export { Canvas };
-
