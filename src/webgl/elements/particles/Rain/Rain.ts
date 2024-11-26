@@ -1,7 +1,6 @@
-import { Math } from "@/utils";
-import ICanvasController from "@/elements/canvas/ICanvasController";
-import IPaths from "@/webgl/interfaces/IPaths";
-import { IParticleData, Particle } from "@/webgl/models/Particle";
+import type ICanvasController from "@/elements/canvas/ICanvasController";
+import type IPaths from "@/webgl/interfaces/IPaths";
+import { type IParticleData, Particle } from "@/webgl/models/Particle";
 
 export default class Rain {
 	RainParticle: Particle;
@@ -28,7 +27,7 @@ export default class Rain {
 			for (let i = 0; i < 10; i++) {
 				// coords data
 				const coords: IParticleData["coords"] = {
-					x: Math.getRandomArbitrary(-1, 1), // Random x position for each particle
+					x: Math.randomArbitrary(-1, 1), // Random x position for each particle
 					x_offset: 0.005,
 					y: 0,
 					y_offset: 0.07,
