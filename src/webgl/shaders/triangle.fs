@@ -13,10 +13,10 @@ vec4 mainColor = vec4(0.0f, 0.7f, 1.0f, 1.0f);
 out vec4 FragColor;
 
 void main() {
-  // st - spatial texture coords
-  // normalized coords of current pixel texture
-  // vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - u_time) / u_resolution.xy;
+    // st - spatial texture coords
+    // normalized coords of current pixel texture
+    // vec2 st = vec2(gl_FragCoord.x, gl_FragCoord.y - u_time) / u_resolution.xy;
 
-  // draw main shader color
-  FragColor = mainColor;
+    // draw main shader color
+    FragColor = mainColor;
 }
