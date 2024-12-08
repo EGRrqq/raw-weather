@@ -69,7 +69,7 @@ export class AsideController {
 		if (!(aside instanceof HTMLElement))
 			throw new Error(`aside element with id: ${asideId} was not found`);
 
-		return aside;
+return aside;
 	}
 
 	#createInput = (
@@ -80,17 +80,31 @@ export class AsideController {
 		const wrapper = document.createElement("section");
 
 		const inputEl = document.createElement("input");
-		inputEl.id = id;
 		inputEl.name = id;
 		inputEl.type = "range";
 		inputEl.min = s.min.toString();
 		inputEl.max = s.max.toString();
 		inputEl.step = s.step.toString();
 		inputEl.value = s.value.toString();
-		this.#inputs[id] = { el: inputEl, eventCb: cb, settings: s };
-		inputEl.addEventListener("input", cb);
 
+		const nameLabel = document.createElement("label");
+		nameLabel.textContent = inputEl.name;
+
+		const valueLabel = document.createElement("label");
+		valueLabel.textContent = inputEl.value;
+
+		const eventCb: IAsideInput["eventCb"] = (e) => {
+			cb(e);
+			valueLabel.textContent = inputEl.value;
+		};
+		
+		inputEl.addEventListener("input", eventCb);
+		this.#inputs[id] = { el: inputEl, eventCb, settings: s };
+
+		wrapper.id = id;
+		wrapper.appendChild(nameLabel);
 		wrapper.appendChild(inputEl);
+		wrapper.appendChild(valueLabel);
 		this.#aside.appendChild(wrapper);
 	};
 
