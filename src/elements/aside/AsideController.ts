@@ -1,11 +1,18 @@
 import type { CanvasController } from "@/elements/canvas/CanvasController";
+import { s } from "@/webgl/elements/particles/Rain/Rain";
 import type { ICoords } from "@/webgl/interfaces/ICoords";
 
-type IAsideInputsMap = "weather-speed";
+type IAsideInputsMap = "particles" | "respawn_time";
 
 interface IAsideInput {
 	el: HTMLInputElement;
 	eventCb: (e: Event) => void;
+	settings: {
+		min: number;
+		max: number;
+		step: number;
+		value: number;
+	};
 }
 type IAsideInputs =
 	| Record<IAsideInputsMap, IAsideInput>
@@ -21,7 +28,34 @@ export class AsideController {
 		this.#updateInitCoords();
 
 		// create inputs
-		this.#createInput("weather-speed", () => console.log("we movin"));
+		this.#createInput(
+			"particles",
+			(e) => {
+				if (e.target instanceof HTMLInputElement)
+					s.particleCount = Number.parseInt(e.target.value);
+			},
+			{
+				min: 0,
+				max: 25,
+				step: 1,
+				value: s.particleCount,
+			},
+		);
+		this.#createInput(
+			"respawn_time",
+			(e) => {
+				if (e.target instanceof HTMLInputElement) {
+					s.respawn.timeInSeconds = Number.parseFloat(e.target.value);
+					s.respawn.flag = true;
+				}
+			},
+			{
+				min: 0,
+				max: 1,
+				step: 0.05,
+				value: s.respawn.timeInSeconds,
+			},
+		);
 
 		// resize canvas on aside resize
 		this.#observer = new ResizeObserver(() => this.#init(canvasController));
@@ -38,14 +72,22 @@ export class AsideController {
 		return aside;
 	}
 
-	#createInput = (id: IAsideInputsMap, cb: IAsideInput["eventCb"]) => {
+	#createInput = (
+		id: IAsideInputsMap,
+		cb: IAsideInput["eventCb"],
+		s: IAsideInput["settings"],
+	) => {
 		const wrapper = document.createElement("section");
 
 		const inputEl = document.createElement("input");
 		inputEl.id = id;
 		inputEl.name = id;
 		inputEl.type = "range";
-		this.#inputs[id] = { el: inputEl, eventCb: cb };
+		inputEl.min = s.min.toString();
+		inputEl.max = s.max.toString();
+		inputEl.step = s.step.toString();
+		inputEl.value = s.value.toString();
+		this.#inputs[id] = { el: inputEl, eventCb: cb, settings: s };
 		inputEl.addEventListener("input", cb);
 
 		wrapper.appendChild(inputEl);

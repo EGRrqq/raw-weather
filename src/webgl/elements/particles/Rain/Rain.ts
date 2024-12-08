@@ -5,8 +5,25 @@ import { type IParticleData, Particle } from "@/webgl/models/Particle";
 import fSource from "@/webgl/shaders/rain/triangle.fs";
 import vSource from "@/webgl/shaders/rain/triangle.vs";
 
+interface ISpawn {
+	data: {
+		program: WebGLProgram;
+		particles: IParticleData[];
+	};
+}
+
+// settings
+export const s = {
+	particleCount: 10,
+	respawn: {
+		timeInSeconds: 0.15,
+		flag: false,
+	},
+};
+
 export default class Rain {
 	RainParticle: Particle;
+	#spawnId: null | number = null;
 
 	constructor(CanvasController: ICanvasController) {
 		this.RainParticle = new Particle(CanvasController);
@@ -25,9 +42,26 @@ export default class Rain {
 		// Store the state of each particle
 		const particles: IParticleData[] = [];
 
-		setInterval(() => {
-			// Create 10 particles
-			for (let i = 0; i < 10; i++) {
+		// Spawn particles
+		this.spawn({
+			data: { program, particles },
+		});
+
+		// draw the scene
+		this.RainParticle.draw({ program, particles });
+	};
+
+	reSpawn = ({ data }: ISpawn) => {
+		// Clear the existing interval
+		if (this.#spawnId) clearInterval(this.#spawnId);
+
+		// Start a new interval with the updated time
+		this.spawn({ data });
+	};
+
+	spawn = ({ data: d }: ISpawn) => {
+		this.#spawnId = setInterval(() => {
+			for (let i = 0; i < s.particleCount; i++) {
 				// coords data
 				const coords: IParticleData["coords"] = {
 					x: Math.randomArbitrary(-1, 1), // Random x position for each particle
@@ -39,17 +73,21 @@ export default class Rain {
 				// supply data to program
 				const { positionBuffer, positions, vao } =
 					this.RainParticle.supplyDataToProgram({
-						program,
+						program: d.program,
 						coords,
 					});
 
 				const startTime = performance.now() / 1000;
 				// push particles
-				particles.push({ vao, positionBuffer, positions, coords, startTime });
-			}
-		}, 250);
+				d.particles.push({ vao, positionBuffer, positions, coords, startTime });
 
-		// draw the scene
-		this.RainParticle.draw({ program, particles });
+				console.log(s.respawn.flag);
+				if (s.respawn.flag) {
+					s.respawn.flag = false;
+					console.log("respawn runs");
+					this.reSpawn({ data: d });
+				}
+			}
+		}, s.respawn.timeInSeconds * 1000);
 	};
 }
