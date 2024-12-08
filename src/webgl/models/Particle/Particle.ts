@@ -59,7 +59,7 @@ export class Particle implements IParticle {
 				const y = -time() - height;
 
 				// If the particle is out of the canvas
-				if (y < -2.07) {
+				if (y < -2 - coords.y_offset) {
 					// remove it from the particles array
 					particles.splice(i, 1);
 
