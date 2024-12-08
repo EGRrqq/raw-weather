@@ -81,10 +81,9 @@ export default class Rain {
 				// push particles
 				d.particles.push({ vao, positionBuffer, positions, coords, startTime });
 
-				console.log(s.respawn.flag);
+				// respawn particles
 				if (s.respawn.flag) {
 					s.respawn.flag = false;
-					console.log("respawn runs");
 					this.reSpawn({ data: d });
 				}
 			}
