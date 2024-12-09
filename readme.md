@@ -9,7 +9,7 @@
 ## Assets
 
 - [design document](./readme/design_document.md)
-- [design proto](./readme/imgs/proto.excalidraw.svg)
+- [design proto](./readme/imgs/proto.excalidraw.webp)
 
 <br/>
 <br/>
