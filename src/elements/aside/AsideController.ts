@@ -69,7 +69,7 @@ export class AsideController {
 		if (!(aside instanceof HTMLElement))
 			throw new Error(`aside element with id: ${asideId} was not found`);
 
-return aside;
+		return aside;
 	}
 
 	#createInput = (
@@ -77,8 +77,13 @@ return aside;
 		cb: IAsideInput["eventCb"],
 		s: IAsideInput["settings"],
 	) => {
+		// Create input wrapper
 		const wrapper = document.createElement("section");
+		const wrapperBlockName = "inputWrapper";
+		wrapper.className = wrapperBlockName;
+		wrapper.id = id;
 
+		// Create input
 		const inputEl = document.createElement("input");
 		inputEl.name = id;
 		inputEl.type = "range";
@@ -86,26 +91,38 @@ return aside;
 		inputEl.max = s.max.toString();
 		inputEl.step = s.step.toString();
 		inputEl.value = s.value.toString();
+		inputEl.className = `${wrapperBlockName}--input`;
 
+		// Create name Label
 		const nameLabel = document.createElement("label");
-		nameLabel.textContent = inputEl.name;
+		nameLabel.className = `${wrapperBlockName}--name`;
+		nameLabel.textContent = inputEl.name.replace(/_/g, "\n");
 
+		// Create value Label
 		const valueLabel = document.createElement("label");
+		valueLabel.className = `${wrapperBlockName}--value`;
 		valueLabel.textContent = inputEl.value;
 
+		// Create input event callback
 		const eventCb: IAsideInput["eventCb"] = (e) => {
 			cb(e);
 			valueLabel.textContent = inputEl.value;
 		};
-		
+
+		// Attach event callback
 		inputEl.addEventListener("input", eventCb);
+		// Attach input data
 		this.#inputs[id] = { el: inputEl, eventCb, settings: s };
 
-		wrapper.id = id;
+		// Create hr
+		const hr = document.createElement("hr");
+
+		// Append children to wrapper
 		wrapper.appendChild(nameLabel);
 		wrapper.appendChild(inputEl);
 		wrapper.appendChild(valueLabel);
 		this.#aside.appendChild(wrapper);
+		this.#aside.appendChild(hr);
 	};
 
 	#updateInitCoords = () => {
